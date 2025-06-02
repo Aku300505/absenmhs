@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9eff6; /* A soft, calming background color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full viewport height */
+            margin: 0;
+            color: #333; /* Standard text color */
+        }
+        .login-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px; /* Slightly more rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Softer, larger shadow */
+            width: 380px; /* Increased width for better form presentation */
+            max-width: 90%; /* Responsive up to 90% of screen width */
+            text-align: center;
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+        h2 {
+            color: #007bff; /* Vibrant blue for the title */
+            margin-bottom: 30px;
+            font-size: 2.2em; /* Larger, more prominent title */
+            font-weight: 700; /* Bold title */
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600; /* Slightly bolder labels */
+            font-size: 1.05em;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 22px); /* Adjust for padding and border */
+            padding: 12px;
+            margin-bottom: 25px; /* More space between inputs */
+            border: 1px solid #ddd;
+            border-radius: 6px; /* Slightly rounded inputs */
+            box-sizing: border-box;
+            font-size: 1em;
+            outline: none; /* Remove default focus outline */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for focus */
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #007bff; /* Blue border on focus */
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Subtle blue glow on focus */
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 14px 28px; /* Larger clickable area */
+            border: none;
+            border-radius: 8px; /* Rounded button */
+            cursor: pointer;
+            font-size: 1.1em; /* Larger text on button */
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Smooth hover effects */
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); /* Subtle shadow for depth */
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            transform: translateY(-2px); /* Subtle lift effect */
+            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3); /* Enhanced shadow on hover */
+        }
+        input[type="submit"]:active {
+            transform: translateY(0); /* "Press" effect */
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+        }
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px; /* Space above form */
+            text-align: left;
+        }
+        .messages li {
+            color: #dc3545; /* Red for error messages */
+            background-color: #fceae9; /* Light red background for messages */
+            border: 1px solid #dc3545;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 8px; /* Space between multiple messages if applicable */
+            font-size: 0.95em;
+            word-wrap: break-word; /* Ensure long messages break correctly */
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        {% if error %}
+        <ul class="messages">
+            <li>{{ error }}</li>
+        </ul>
+        {% endif %}
+        <form method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required autocomplete="username">
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required autocomplete="current-password">
+
+            <input type="submit" value="Login">
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Absensi Wajah</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        video {
+            border-radius: 8px;
+            border: 5px solid #28a745;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            width: 640px;
+            height: 480px;
+            background-color: black;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            min-height: 1.5em;
+            max-width: 640px;
+            text-align: center;
+        }
+        #message.success {
+            color: green;
+        }
+        #message.error {
+            color: red;
+        }
+        button {
+            margin-top: 25px;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        canvas {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mulai Absensi Wajah</h1>
+    <video id="video" autoplay muted></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <button id="absenBtn">Absen Sekarang</button>
+    <p id="message"></p>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const message = document.getElementById('message');
+        const absenBtn = document.getElementById('absenBtn');
+
+        // Minta akses kamera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                alert("Tidak bisa mengakses kamera: " + err);
+            });
+
+        absenBtn.addEventListener('click', () => {
+            message.textContent = "";
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/jpeg');
+
+            message.textContent = "Memproses absensi...";
+            message.className = "";
+
+            fetch('/absen/deteksi', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ image: imageData })
+            })
+            .then(res => res.json())
+            .then(data => {
+                message.textContent = data.message;
+                if (data.status === "success") {
+                    message.className = "success";
+                } else {
+                    message.className = "error";
+                }
+            })
+            .catch(err => {
+                message.textContent = "Terjadi kesalahan saat proses absensi.";
+                message.className = "error";
+                console.error(err);
+            });
+        });
+    </script>
+</body>
+</html>
